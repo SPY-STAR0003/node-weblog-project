@@ -1,12 +1,20 @@
 const express = require('express');
 const envConfig = require('dotenv').config({path : "./config/config.env"}); 
+const morgen = require('morgan');
 
 const statics = require('./utils/statics');
 const middlewares = require("./utils/middlewares.js");
+const connetDB = require("./config/db")
 
 const homeRoute = require('./routes/home');
 
 const app = express();
+
+// * connect to Database
+connetDB()
+
+// * logging
+// app.use(morgen("dev"))
 
 // * statics && middlewares
 app.use(statics)
