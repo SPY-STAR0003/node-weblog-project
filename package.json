@@ -4,20 +4,22 @@
   "description": "this is a weblog that make by express & EJS & node !",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon -e js,html,css,ejs app.js"
+    "dev": "cross-env NODE_ENV=development nodemon -e js,html,css,ejs app.js",
+    "start": "cross-env NODE_ENV=production node app.js"
   },
   "author": "SPY-STAR0003",
-  "license": "ISC",
+  "license": "MIT",
   "repository": {
     "url": "https://github.com/SPY-STAR0003/node-weblog-project"
   },
   "dependencies": {
+    "dotenv": "^16.3.1",
     "ejs": "^3.1.9",
     "express": "^4.18.2",
     "mongoose": "^7.5.0"
   },
   "devDependencies": {
-    "body-parser": "^1.20.2"
+    "body-parser": "^1.20.2",
+    "cross-env": "^7.0.3"
   }
 }

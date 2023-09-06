@@ -1,8 +1,10 @@
 const express = require('express');
+const envConfig = require('dotenv').config({path : "./config/config.env"}); 
 
 const statics = require('./utils/statics');
 const middlewares = require("./utils/middlewares.js");
-const { homeRoute } = require('./controllers/home');
+
+const homeRoute = require('./routes/home');
 
 const app = express();
 
@@ -23,4 +25,7 @@ app.use("",(req,res) => {
 })
 
 // * listen to port 300
-app.listen(3000, () => console.log("server has been run !"))
+const PORT = process.env.PORT || 5000
+app.listen(PORT, () => {
+    console.log(`server has been run in ${process.env.NODE_ENV} mode port ${PORT}`) 
+})
