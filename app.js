@@ -8,6 +8,7 @@ const middlewares = require("./utils/middlewares.js");
 const connetDB = require("./config/db")
 
 const homeRoute = require('./routes/home');
+const loginRoute = require('./routes/login');
 
 const app = express();
 
@@ -30,6 +31,7 @@ app.set("views", "views")
 
 // * routes
 app.use("/" ,homeRoute)
+app.use("/login", loginRoute)
 
 // * 404
 app.use("",(req,res) => {
