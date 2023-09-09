@@ -1,6 +1,7 @@
 const express = require('express');
 const envConfig = require('dotenv').config({path : "./config/config.env"}); 
 const morgen = require('morgan');
+const layoutManager = require("express-ejs-layouts");
 
 const statics = require('./utils/statics');
 const middlewares = require("./utils/middlewares.js");
@@ -21,6 +22,9 @@ app.use(statics)
 app.use(middlewares)
 
 // * engines
+// app.use(layoutManager)
+// app.set('layout', './layouts/main/index');
+
 app.set("view engine" , "ejs")
 app.set("views", "views")
 

@@ -1,3 +1,47 @@
 body {
+    text-align: right !important;
     direction: rtl;
+}
+
+@font-face {
+    font-family: IRANSans;
+    font-style: normal;
+    font-weight: bold;
+    src: url('./fonts/woff/IRANSansX-Bold.woff') format('woff'); /* All Major Browsers */
+}
+@font-face {
+    font-family: IRANSans;
+    font-style: normal;
+    font-weight: 500;
+    src: url('./fonts/woff/IRANSansX-Medium.woff') format('woff'); /* All Major Browsers */
+}
+@font-face {
+    font-family: IRANSans;
+    font-style: normal;
+    font-weight: 300;
+    src: url('./fonts/woff/IRANSansX-Light.woff') format('woff'); /* All Major Browsers */
+}
+@font-face {
+    font-family: IRANSans;
+    font-style: normal;
+    font-weight: 200;
+    src: url('./fonts/woff/IRANSansX-UltraLight.woff') format('woff'); /* All Major Browsers */
+}
+@font-face {
+    font-family: IRANSans;
+    font-style: normal;
+    font-weight: normal;
+    src: url('./fonts/woff/IRANSansX.woff') format('woff'); /* All Major Browsers */
+}
+
+body {
+    font-family: IRANSans !important;
+}
+
+.iransans {
+    font-family: IRANSans !important;
+}
+
+button {
+    font-family: inherit;
 }

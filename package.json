@@ -13,9 +13,13 @@
     "url": "https://github.com/SPY-STAR0003/node-weblog-project"
   },
   "dependencies": {
+    "@fortawesome/react-fontawesome": "^0.2.0",
+    "bootstrap-v4-rtl": "^4.6.2-1",
     "dotenv": "^16.3.1",
     "ejs": "^3.1.9",
     "express": "^4.18.2",
+    "express-ejs-layouts": "^2.5.1",
+    "font-awesome": "^4.7.0",
     "mongoose": "^7.5.0",
     "morgan": "^1.10.0"
   },
