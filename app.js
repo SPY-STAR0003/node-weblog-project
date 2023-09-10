@@ -9,7 +9,7 @@ const connetDB = require("./config/db")
 
 const homeRoute = require('./routes/home');
 const adminRoute = require('./routes/admin');
-
+const signRoute = require('./routes/sign');
 const app = express();
 
 // * connect to Database
@@ -32,6 +32,7 @@ app.set("views", "views")
 // * routes
 app.use("/" ,homeRoute)
 app.use('/admin', adminRoute)
+app.use("/sign", signRoute)
 
 // * 404
 app.use("",(req,res) => {
