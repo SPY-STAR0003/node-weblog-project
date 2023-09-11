@@ -2,17 +2,7 @@
 const { Router } = require('express');
 
 const router = new Router();
-const yup = require('yup');
-const url = require('url');
-
-const userSchema = yup.object({
-    name : yup.string().required().trim().matches(/^[a-z]+$/, {
-        message : "You only can use elphebets !"
-    }),
-    email : yup.string().email().required().trim(),
-    password : yup.string().required(),
-    repeatPassword : yup.string().required().oneOf([yup.ref("password"), null], "password most be match !")
-})
+const user = require('../models/user');
 
 router.get("/in", (req,res) => {
     res.render("signIn", {
@@ -30,15 +20,15 @@ router.get("/up", (req,res) => {
 
 router.post("/up", (req,res) => {
 
-    userSchema.validate(req.body)
-        .then((user) => (
+    user.userValidation(req.body)
+        .then(() => {
             res.redirect("/sign/in")
-        ))
-        .catch((e) => {
+        })
+        .catch((err) => {
             res.render("signUp", {
-                pageTitle : "sign up for weblog",
-                path : "/signUp",
-                errors : e.errors
+                pageTitle : "Sign Up for weblog",
+                errors : err.errors,
+                path : "/signUp"
             })
         })
 })
