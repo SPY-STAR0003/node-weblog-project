@@ -1,26 +1,48 @@
 const express = require('express');
 const envConfig = require('dotenv').config({path : "./config/config.env"}); 
-const morgen = require('morgan');
+const morgan = require('morgan');
 const layoutManager = require("express-ejs-layouts");
+const session = require('express-session');
+const flash = require('express-flash');
+const MongoStore = require('connect-mongo');
+const debug = require('debug')("web");
+const supportsColor = import("supports-color")
 
 const statics = require('./utils/statics');
 const middlewares = require("./utils/middlewares.js");
-const connetDB = require("./config/db")
+const connetDB = require("./config/db");
 
 const homeRoute = require('./routes/home');
 const adminRoute = require('./routes/admin');
 const signRoute = require('./routes/sign');
+const passport = require('passport');
 const app = express();
 
 // * connect to Database
 connetDB()
 
+require('./config/passport');
+
 // * logging
-// app.use(morgen("dev"))
+if(process.env.NODE_ENV === "development") {
+    debug("morgan is working correctly ")
+    app.use(morgan("tiny"))
+}
 
 // * statics && middlewares
 app.use(statics)
 app.use(middlewares)
+app.use(session({
+    secret : "secret",
+    resave : false,
+    saveUninitialized : false,
+    store : MongoStore.create({
+        mongoUrl : process.env.MONGODB_URL
+    })
+}))
+app.use(flash())
+app.use(passport.initialize())
+app.use(passport.session())
 
 // * engines
 // app.use(layoutManager)
@@ -31,7 +53,7 @@ app.set("views", "views")
 
 // * routes
 app.use("/" ,homeRoute)
-app.use('/admin', adminRoute)
+app.use('/user', adminRoute)
 app.use("/sign", signRoute)
 
 // * 404

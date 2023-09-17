@@ -1,12 +1,41 @@
 
-const user = require('../models/user');
+const passport = require('passport');
 const bcrypt = require('bcryptjs');
+
+const user = require('../models/user');
 
 const signInGetController = (req,res) => {
     res.render("signIn", {
         pageTitle : "sign in to weblog",
-        path : '/signIn'
+        path : '/signIn',
+        message : req.flash('success_msg'),
+        error : req.flash("error")
     })
+}
+
+const logOutController = (req,res,next) => {
+    req.logout((err) => {
+        if(err) return next(err)
+        
+        req.flash("success_msg", "Log Out! Successfully!");
+        res.redirect("/sign/in");
+    })
+}
+
+const rememberMe = (req, res) => {
+    if(req.body.remember) {
+        req.session.cookie.originalMaxAge = 8640000
+    } 
+
+    res.redirect("/user/dashboard")
+}
+
+const signInPostController = (req,res, next) => {
+    passport.authenticate("local", {
+        // successRedirect : "/user/dashboard",
+        failureRedirect : "/sign/in",
+        failureFlash : true,
+    })(req, res, next)
 }
 
 const signUpPostController = async (req,res) => {
@@ -19,7 +48,10 @@ const signUpPostController = async (req,res) => {
                 ...req.body,
                 password : hash
             })
-            .then(() => res.redirect("/sign/in"))
+            .then(() => {
+                req.flash("success_msg", `${req.body.name}! Your registering was successfull !`)
+                res.redirect("/sign/in")
+            })
             .catch((err) => {
                 err.message.includes("E11000") && res.render("signUp", {
                     pageTitle : "Sign Up for weblog",
@@ -44,8 +76,12 @@ const signUpGetController = (req,res) => {
     })
 }
 
+
 module.exports = {
     signInGetController,
     signUpPostController,
-    signUpGetController
+    signUpGetController,
+    signInPostController,
+    logOutController,
+    rememberMe
 }
