@@ -6,11 +6,12 @@ const session = require('express-session');
 const flash = require('express-flash');
 const MongoStore = require('connect-mongo');
 const debug = require('debug')("web");
-const supportsColor = import("supports-color")
+const parser = require('body-parser');
 
 const statics = require('./utils/statics');
 const middlewares = require("./utils/middlewares.js");
 const connetDB = require("./config/db");
+const winston = require('./config/winston');
 
 const homeRoute = require('./routes/home');
 const adminRoute = require('./routes/admin');
@@ -23,11 +24,13 @@ connetDB()
 
 require('./config/passport');
 
+app.use(parser.urlencoded({extended : false}))
+
 // * logging
-if(process.env.NODE_ENV === "development") {
-    debug("morgan is working correctly ")
-    app.use(morgan("tiny"))
-}
+// if(process.env.NODE_ENV === "development") {
+//     debug("morgan is working correctly ", { stream : winston.stream })
+//     app.use(morgan("tiny"))
+// }
 
 // * statics && middlewares
 app.use(statics)
@@ -53,8 +56,8 @@ app.set("views", "views")
 
 // * routes
 app.use("/" ,homeRoute)
-app.use('/user', adminRoute)
-app.use("/sign", signRoute)
+app.use('/admin', adminRoute)
+app.use("/user", signRoute)
 
 // * 404
 app.use("",(req,res) => {

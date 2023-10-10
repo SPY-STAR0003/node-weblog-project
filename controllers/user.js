@@ -1,10 +1,10 @@
-
 const passport = require('passport');
 const bcrypt = require('bcryptjs');
+const axios = require('axios');
 
 const user = require('../models/user');
 
-const signInGetController = (req,res) => {
+const loginGetControl = (req,res) => {
     res.render("signIn", {
         pageTitle : "sign in to weblog",
         path : '/signIn',
@@ -13,12 +13,12 @@ const signInGetController = (req,res) => {
     })
 }
 
-const logOutController = (req,res,next) => {
+const logOutControl = (req,res,next) => {
     req.logout((err) => {
         if(err) return next(err)
         
         req.flash("success_msg", "Log Out! Successfully!");
-        res.redirect("/sign/in");
+        res.redirect("/user/login");
     })
 }
 
@@ -27,18 +27,32 @@ const rememberMe = (req, res) => {
         req.session.cookie.originalMaxAge = 8640000
     } 
 
-    res.redirect("/user/dashboard")
+    res.redirect("/admin/dashboard")
 }
 
-const signInPostController = (req,res, next) => {
-    passport.authenticate("local", {
-        // successRedirect : "/user/dashboard",
-        failureRedirect : "/sign/in",
-        failureFlash : true,
-    })(req, res, next)
+const loginPostControl = async (req,res, next) => { 
+
+    if(!req.body['g-recaptcha-response']) {
+        req.flash("error", "You should accept captcha")
+        return res.redirect("/user/login")
+    }
+
+    const postUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.CAPTCHA_KEY}&response=${req.body['g-recaptcha-response']}`
+
+    try {
+        await axios.post(postUrl)
+        passport.authenticate("local", {
+            failureRedirect : "/user/login",
+            failureFlash : true,
+        })(req, res, next)
+    } catch (error) {
+        req.flash("error", "Try Again !")
+        res.redirect("/user/login")
+    }
+
 }
 
-const signUpPostController = async (req,res) => {
+const registerPostControl = async (req,res) => {
 
     user.userValidation(req.body)
         .then(async () => {
@@ -50,7 +64,7 @@ const signUpPostController = async (req,res) => {
             })
             .then(() => {
                 req.flash("success_msg", `${req.body.name}! Your registering was successfull !`)
-                res.redirect("/sign/in")
+                res.redirect("/user/login")
             })
             .catch((err) => {
                 err.message.includes("E11000") && res.render("signUp", {
@@ -69,19 +83,18 @@ const signUpPostController = async (req,res) => {
         })
 }
 
-const signUpGetController = (req,res) => {
+const registerGetControl = (req,res) => {
     res.render("signUp", {
         pageTitle : "sign up to weblog",
         path : '/signUp'
     })
 }
 
-
 module.exports = {
-    signInGetController,
-    signUpPostController,
-    signUpGetController,
-    signInPostController,
-    logOutController,
+    loginGetControl,
+    registerPostControl,
+    registerGetControl,
+    loginPostControl,
+    logOutControl,
     rememberMe
 }

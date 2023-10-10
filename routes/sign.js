@@ -2,17 +2,24 @@
 const { Router } = require('express');
 
 const router = new Router();
-const { signInGetController, signUpGetController, signUpPostController, signInPostController, logOutController, rememberMe } = require('../controllers/user');
+const {
+    loginGetControl,
+    registerPostControl,
+    registerGetControl,
+    loginPostControl,
+    logOutControl,
+    rememberMe
+} = require('../controllers/user');
 const { auth } = require('../middlewares/auth');
 
-router.get("/in", signInGetController)
+router.get("/login", loginGetControl)
 
-router.post("/in", signInPostController, rememberMe)
+router.post("/login", loginPostControl, rememberMe)
 
-router.get("/up", signUpGetController)
+router.get("/register", registerGetControl)
 
-router.post("/up", signUpPostController)
+router.post("/register", registerPostControl)
 
-router.get("/out", auth, logOutController)
+router.get("/logout", auth, logOutControl)
 
 module.exports = router
