@@ -5,9 +5,9 @@ const axios = require('axios');
 const user = require('../models/user');
 
 const loginGetControl = (req,res) => {
-    res.render("signIn", {
+    res.render("login", {
         pageTitle : "sign in to weblog",
-        path : '/signIn',
+        path : '/login',
         message : req.flash('success_msg'),
         error : req.flash("error")
     })
@@ -67,26 +67,26 @@ const registerPostControl = async (req,res) => {
                 res.redirect("/user/login")
             })
             .catch((err) => {
-                err.message.includes("E11000") && res.render("signUp", {
+                err.message.includes("E11000") && res.render("register", {
                     pageTitle : "Sign Up for weblog",
                     errors : ["This email has been used before !"],
-                    path : "/signUp"
+                    path : "/register"
                 })
             })
         })
         .catch((err) => {
-            res.render("signUp", {
+            res.render("register", {
                 pageTitle : "Sign Up for weblog",
                 errors : err.errors,
-                path : "/signUp"
+                path : "/register"
             })
         })
 }
 
 const registerGetControl = (req,res) => {
-    res.render("signUp", {
+    res.render("register", {
         pageTitle : "sign up to weblog",
-        path : '/signUp'
+        path : '/register'
     })
 }
 
