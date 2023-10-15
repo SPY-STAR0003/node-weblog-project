@@ -1,13 +1,20 @@
 
-
 const { default: mongoose } = require('mongoose');
 const yup = require('yup');
 
-const postSchema = {
+const postYupSchema = yup.object({
+    subject : yup.string().required(),
+    author : yup.string().required(),
+    text : yup.string().required(),
+})
+
+const postSchemaProps = {
     title : {
         type : String,
+        trim : true,
         required : true,
-        trim : true
+        minLength : 5,
+        maxLength : 255
     },
     body : {
         type : String,
@@ -16,24 +23,19 @@ const postSchema = {
     status : {
         type : String,
         default : "public",
-        enum : ["public", "local"]
+        enum : ["public", "private"]
     },
     user : {
         type : mongoose.Schema.Types.ObjectId,
-        ref : "User"
+        ref : "user"
+    },
+    createdAt : {
+        type : Date,
+        default : Date.now()
     }
 }
 
-// const yupSchema = yup.object({
-//     author : yup.string().required().trim().matches(/^[a-z]+$/, {
-//         message : "You only can use elphebets !"
-//     }),
-//     text : yup.string().required().trim(),
-//     date : yup.string().required(),
-//     like : yup.number().required(),
-// })
-
 module.exports = {
-    // yupSchema,
-    postSchema
+    postSchemaProps,
+    postYupSchema
 }

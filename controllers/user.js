@@ -4,7 +4,7 @@ const axios = require('axios');
 
 const user = require('../models/user');
 
-const loginGetControl = (req,res) => {
+exports.loginGet = (req,res) => {
     res.render("login", {
         pageTitle : "sign in to weblog",
         path : '/login',
@@ -13,7 +13,7 @@ const loginGetControl = (req,res) => {
     })
 }
 
-const logOutControl = (req,res,next) => {
+exports.logOut = (req,res,next) => {
     req.logout((err) => {
         if(err) return next(err)
         
@@ -22,7 +22,7 @@ const logOutControl = (req,res,next) => {
     })
 }
 
-const rememberMe = (req, res) => {
+exports.rememberMe = (req, res) => {
     if(req.body.remember) {
         req.session.cookie.originalMaxAge = 8640000
     } 
@@ -30,7 +30,7 @@ const rememberMe = (req, res) => {
     res.redirect("/admin/dashboard")
 }
 
-const loginPostControl = async (req,res, next) => { 
+exports.loginPost = async (req,res, next) => { 
 
     if(!req.body['g-recaptcha-response']) {
         req.flash("error", "You should accept captcha")
@@ -52,7 +52,7 @@ const loginPostControl = async (req,res, next) => {
 
 }
 
-const registerPostControl = async (req,res) => {
+exports.registerPost = async (req,res) => {
 
     user.userValidation(req.body)
         .then(async () => {
@@ -83,18 +83,9 @@ const registerPostControl = async (req,res) => {
         })
 }
 
-const registerGetControl = (req,res) => {
+exports.registerGet = (req,res) => {
     res.render("register", {
         pageTitle : "sign up to weblog",
         path : '/register'
     })
-}
-
-module.exports = {
-    loginGetControl,
-    registerPostControl,
-    registerGetControl,
-    loginPostControl,
-    logOutControl,
-    rememberMe
 }

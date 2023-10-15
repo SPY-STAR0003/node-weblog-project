@@ -13,7 +13,7 @@ passport.use( new Strategy({usernameField : "email"} , async (email, password, d
         const user = await User.findOne({email})
 
         if(!user) {
-            done(null, false, {message : "There is no users with this information !"})
+            done(null, false, {message : "There is no users with this details !"})
         }
     
         const isMatch = await bcrypt.compare(password, user.password)
@@ -21,7 +21,7 @@ passport.use( new Strategy({usernameField : "email"} , async (email, password, d
         if(isMatch) {
             done(null, user)
         } else {
-            done(null, false, {message : "There is no users with this information !"})
+            done(null, false, {message : "There is no users with this details !"})
         }
         
     } catch (err) {
