@@ -8,7 +8,26 @@ router.get("/dashboard", auth, (req,res) => {
     res.render("dashboard", {
         pageTitle : "Dashboard",
         path : '/dashboard',
-        fullname : req.user.name
+        page : "/dashboard",
+        fullName : req.user.name,
+    })
+})
+
+router.get("/posts", auth, (req,res) => {
+    res.render("dashboard", {
+        pageTitle : `${req.user.name} posts`,
+        path : '/dashboard',
+        page : "/posts",
+        fullName : req.user.name,
+    })
+})
+
+router.get("/add-post", auth, (req,res) => {
+    res.render("dashboard", {
+        pageTitle : `Add Post`,
+        path : '/dashboard',
+        page : "/add-post",
+        fullName : req.user.name,
     })
 })
 

@@ -1,0 +1,10 @@
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 pt-4">
+        <% if (page === "/dashboard") { %>
+            <h3> Welcome to your dashboard </h3>
+        <% } else if(page === "/posts") { %>
+            <%- include("./posts/list.ejs") %>
+        <% } else if(page === "/add-post") { %>
+            <h3> Add Your Post ! </h3>
+        <% } %>
+    </div>
+</main>
