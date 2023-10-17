@@ -62,7 +62,7 @@ exports.registerPost = async (req,res) => {
                 password : hash
             })
             .then(() => {
-                req.flash("success_msg", `${req.body.name}! Your registering was successfull !`)
+                req.flash("success_msg", `${req.body.name}! Your registering was successful !`)
                 res.redirect("/user/login")
             })
             .catch((err) => {

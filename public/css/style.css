@@ -28,3 +28,7 @@
     font-weight: normal;
     src: url('./fonts/woff/IRANSansX-Regular.woff') format('woff'); /* All Major Browsers */
 }
+
+a {
+    text-decoration: none !important;
+}

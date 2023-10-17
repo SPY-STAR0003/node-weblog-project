@@ -3,9 +3,8 @@ const { default: mongoose } = require('mongoose');
 const yup = require('yup');
 
 const postYupSchema = yup.object({
-    subject : yup.string().required(),
-    author : yup.string().required(),
-    text : yup.string().required(),
+    title : yup.string().required(),
+    body : yup.string().required(),
 })
 
 const postSchemaProps = {

@@ -1,0 +1,47 @@
+<form
+  action="/admin/add-post"
+  method="post"
+  class="needs-validation"
+  novalidate
+>
+  <% if(typeof addPostAlert !== "undefined") { %>
+    <div class="alert alert-warning alert-dismissible" role="alert">
+      <div><%= typeof addPostAlert %></div>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  <% } %>
+  <div class="form-row">
+    <div class="col-md-4 mb-3">
+      <label for="validationTooltip01">Title :</label>
+      <input
+        name="title"
+        type="text"
+        class="form-control mt-2"
+        id="validationTooltip01"
+        placeholder="Title"
+        required
+      />
+      <div class="valid-tooltip">Looks good!</div>
+    </div>
+    <div class="col-md-4 mb-3">
+      <label for="statusSelect">Status :</label>
+      <select id="statusSelect" name="status" class="form-select mt-2" aria-label="Default select example">
+        <option value="public" selected> public </option>
+        <option value="private"> private </option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="body" class="form-label"
+        >Post body :</label
+      >
+      <textarea
+        name="body"
+        placeholder="Add your post body here !"
+        class="form-control"
+        id="body"
+        rows="3"
+      ></textarea>
+    </div>
+  </div>
+  <button class="btn btn-primary" type="submit">Submit form</button>
+</form>
