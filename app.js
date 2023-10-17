@@ -10,7 +10,7 @@ const parser = require('body-parser');
 
 const statics = require('./utils/statics');
 const middlewares = require("./utils/middlewares.js");
-const connetDB = require("./config/db");
+const connectDB = require("./config/db");
 const winston = require('./config/winston');
 
 const homeRoute = require('./routes/home');
@@ -20,7 +20,7 @@ const passport = require('passport');
 const app = express();
 
 // * connect to Database
-connetDB()
+connectDB()
 
 require('./config/passport');
 
@@ -36,7 +36,7 @@ app.use(parser.urlencoded({extended : false}))
 app.use(statics)
 app.use(middlewares)
 app.use(session({
-    secret : "secret",
+    secret : process.env.SESSION_SECRET,
     resave : false,
     saveUninitialized : false,
     store : MongoStore.create({
@@ -60,9 +60,7 @@ app.use('/admin', adminRoute)
 app.use("/user", signRoute)
 
 // * 404
-app.use("",(req,res) => {
-    res.send("<h1>404</h1>")
-})
+app.use("",require('./controllers/errors').get404)
 
 // * listen to port 300
 const PORT = process.env.PORT || 5000

@@ -1,9 +1,8 @@
+const {get404, get500} = require('../controllers/errors');
 
 const Post = require('../models/post'); 
 
 exports.addPost = (req,res) => {
-
-
 
     Post.postValidation(req.body)
     .then(() => {
@@ -45,16 +44,21 @@ exports.showAddPostForm = (req,res) => {
 }
 
 exports.getPosts = async (req,res) => {
+    try {
+        const posts = await Post.find({user : req.user._id})
 
-    const posts = await Post.find({user : req.user._id})
+        res.render("dashboard", {
+            pageTitle : `${req.user.name} posts`,
+            path : '/dashboard',
+            page : "/posts",
+            fullName : req.user.name,
+            posts
+        })
+    } catch (error) {
+        console.log(error)
+        get500(req,res)
+    }
 
-    res.render("dashboard", {
-        pageTitle : `${req.user.name} posts`,
-        path : '/dashboard',
-        page : "/posts",
-        fullName : req.user.name,
-        posts
-    })
 }
 
 exports.dashboard = (req,res) => {
