@@ -2,43 +2,39 @@ const {get404, get500} = require('../controllers/errors');
 
 const Post = require('../models/post'); 
 
-exports.addPost = (req,res) => {
+exports.addPost = async (req,res) => {
 
-    Post.postValidation(req.body)
-    .then(() => {
-        Post.create({
+    const errorsArr = []
+
+    try {
+        await Post.postValidation(req.body)
+        await Post.create({
             ...req.body,
             user : req.user._id
-        }).then(() => {
-            // req.flash("add-post-msg", "Your post added to posts successfully !")
-            console.log({
-                ...req.body,
-                user : req.user._id
-            })
-            res.redirect("/admin/posts")
-        }).catch((err) => {
-            console.log(err)
-            // req.flash("add_post_alert","error 1")
-            res.redirect("/admin/add-post")
         })
-    })
-    .catch((err) => {
-        console.log(err)
-        // req.flash("add_post_alert", "error 2")
-        res.redirect("/admin/add-post")
-    })
-    
+        res.redirect("/admin/posts")
+    } catch (err) {
+        err.errors.forEach(err => errorsArr.push(err));
+        console.log(errorsArr)
+        res.render("dashboard", {
+            pageTitle: "Add Post",
+            path : '/dashboard',
+            page : "/add-post",
+            fullName: req.user.name,
+            errors: errorsArr,
+        });
+    }
 }
 
 exports.showAddPostForm = (req,res) => {
 
-    console.log("errors = " + req.flash('add_post_alert'))
+    // console.log("errors = " + req.flash('add_post_errors'))
 
     res.render("dashboard", {
         pageTitle : `Add Post`,
         path : '/dashboard',
         page : "/add-post",
-        addPostAlert : req.flash('add_post_alert'),
+        errors : req.flash('add_post_errors'),
         fullName : req.user.name,
     })
 }
@@ -55,7 +51,7 @@ exports.getPosts = async (req,res) => {
             posts
         })
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         get500(req,res)
     }
 

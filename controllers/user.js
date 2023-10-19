@@ -16,7 +16,8 @@ exports.loginGet = (req,res) => {
 exports.logOut = (req,res,next) => {
     req.logout((err) => {
         if(err) return next(err)
-        req.flash("success_msg", "Log Out! Successfully!");
+        req.session = null
+        // req.flash("success_msg", "Log Out! Successfully!");
         res.redirect("/user/login");
     })
 }
