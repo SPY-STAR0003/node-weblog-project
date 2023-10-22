@@ -9,7 +9,8 @@ const postYupSchema = yup.object({
         .max("255", "Title shouldn't be more than 255 !"),
     body : yup.string()
         .required("body is a required field"),
-    status : yup.mixed().oneOf(['public', 'private'])
+    status : yup.mixed()
+        .oneOf(['public', 'private'], "status has to choose between public & private !")
 })
 
 const postSchemaProps = {

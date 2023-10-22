@@ -7,6 +7,8 @@ const posts = require('../controllers/post');
 
 router.get("/dashboard", auth, posts.dashboard)
 
+router.post("/image-upload", auth, posts.upload)
+
 router.get("/posts", auth, posts.getPosts)
 
 router.get("/add-post", auth, posts.showAddPostForm)
