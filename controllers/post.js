@@ -1,6 +1,6 @@
 const {get404, get500} = require('../controllers/errors');
 const multer  = require('multer')
-const uuid = require('uuid').v4;
+const {fileFilter, storage} = require('../utils/multer');
 
 const Post = require('../models/post'); 
 
@@ -31,37 +31,21 @@ exports.addPost = async (req,res) => {
 
 exports.upload = async (req, res) => {
 
-    const storage = multer.diskStorage({
-        destination: (req, file, cb) => {
-            cb(null, "./public/uploads/");
-        },
-        filename: (req, file, cb) => {
-            // console.log(file);
-            cb(null, `${uuid()}_${file.originalname}`);
-        },
-    });
-
-    const fileFilter = (req, file, cb) => {
-        if (file.mimetype == "image/jpeg") {
-            cb(null, true);
-        } else {
-            cb("Only JPEG Format supported !", false);
-        }
-    };
-
     const upload = multer({
         limits: { fileSize: 4000000 },
         dest: "uploads/",
-        storage: storage,
-        fileFilter: fileFilter,
+        storage,
+        fileFilter,
     }).single("post-image");
 
     upload(req, res, (err) => {
         if (err) {
-            console.log("not")
-            res.send("not")
+            console.log(err)
+            res.send("There is an error in uploading ...")
         } else {
-            res.status(200).send("Upload was successful !");
+            req.file
+            ? res.status(200).send("Upload was successful !")
+            : res.send("upload a picture !")
         }
     });
 }
