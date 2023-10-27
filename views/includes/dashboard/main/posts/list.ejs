@@ -10,6 +10,7 @@
           <th scope="col">AuthorId</th>
           <th scope="col">Date</th>
           <th scope="col">Condition</th>
+          <th scope="col">Edit</th>
         </tr>
       </thead>
       <tbody>
@@ -37,6 +38,14 @@
               <% } else { %>
                 <span class="badge text-bg-warning">Private</span>
               <% } %>
+            </td>
+            <td class="p-2">
+              <a href="/admin/edit-post/<%= posts[index].id %>">
+                <span class="badge text-bg-info">Edit</span>
+              </a>
+              <a href="/admin/delete-post/<%= posts[index].id %>">
+                <span class="badge text-bg-danger">Delete</span>
+              </a>
             </td>
           </tr>
         <% } %>

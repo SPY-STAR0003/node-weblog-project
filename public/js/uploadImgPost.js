@@ -2,8 +2,9 @@
 const imageStatus = document.getElementById("image-status");
 const image = document.getElementById("upload-img-post");
 const uploadBtn = document.getElementById("btn-upload-post-img");
-const progressBar = document.getElementById("post-progress-bar")
-const progress = document.getElementById("post-progress")
+const progressBar = document.getElementById("post-progress-bar");
+const progress = document.getElementById("post-progress");
+const successBtn = document.getElementById("post-ing-upload-success-btn");
 
 uploadBtn.onclick = () => {
     let http = new XMLHttpRequest(); // create new AJAX request
@@ -31,4 +32,14 @@ uploadBtn.onclick = () => {
     } else {
         imageStatus.innerHTML = "You should upload a picture first !"
     }
+}
+
+imageStatus.onclick = e => {
+    // console.log(e.target.innerHTML);
+    navigator.clipboard.writeText(e.target.innerHTML);
+
+    successBtn.style.display = "block";
+    setTimeout(() => {
+        successBtn.style.display = "none";
+    }, 2000)
 }

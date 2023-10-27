@@ -1,9 +1,12 @@
 const {get404, get500} = require('../controllers/errors');
 const multer  = require('multer')
 const {fileFilter, storage} = require('../utils/multer');
+const uuid = require('uuid').v4;
+const sharp = require('sharp');
 
 const Post = require('../models/post'); 
 
+// * (POST) a post method to send & make a post
 exports.addPost = async (req,res) => {
 
     const errorsArr = []
@@ -29,27 +32,32 @@ exports.addPost = async (req,res) => {
     }
 }
 
-exports.upload = async (req, res) => {
+// * (GET) show edit-post page with post info
+exports.editPost = async (req, res) => {
 
-    const upload = multer({
-        limits: { fileSize: 4000000 },
-        dest: "uploads/",
-        storage,
-        fileFilter,
-    }).single("post-image");
+    const post = await Post.findOne({
+        _id : req.params.id
+    })
 
-    upload(req, res, (err) => {
-        if (err) {
-            console.log(err)
-            res.send("There is an error in uploading ...")
-        } else {
-            req.file
-            ? res.status(200).send("Upload was successful !")
-            : res.send("upload a picture !")
-        }
+    if(!post) {
+        return res.redirect("errors/404")
+    }
+
+    if(post.user.toString() !== req.user._id) {
+        return res.redirect("/admin/dashboard")
+    }
+
+    res.render("dashboard", {
+        pageTitle: "Edit Post",
+        path : '/dashboard',
+        page : "/edit-post",
+        fullName: req.user.name,
+        post
     });
+
 }
 
+// * (GET) show add post form
 exports.showAddPostForm = (req,res) => {
 
     // console.log("errors = " + req.flash('add_post_errors'))
@@ -63,6 +71,7 @@ exports.showAddPostForm = (req,res) => {
     })
 }
 
+// * (GET) get posts from db
 exports.getPosts = async (req,res) => {
     try {
         const posts = await Post.find({user : req.user._id})
@@ -81,6 +90,7 @@ exports.getPosts = async (req,res) => {
 
 }
 
+// * (GET) show dashboard page
 exports.dashboard = (req,res) => {
     res.render("dashboard", {
         pageTitle : "Dashboard",
@@ -88,4 +98,112 @@ exports.dashboard = (req,res) => {
         page : "/dashboard",
         fullName : req.user.name,
     })
+}
+
+// * (POST) send a img & make a link
+exports.upload = async (req, res) => {
+
+    const upload = multer({
+        limits: { fileSize: 4000000 },
+        // dest: "uploads/",
+        // storage,
+        fileFilter,
+    }).single("post-image");
+
+    upload(req, res, async (err) => {
+        if (err) {
+            if(err === "FORMAT_ERR") {
+                res.status(400).send("Only JPG Format supported !")
+            }
+            console.log(err)
+            res.status(400).send("There is an error in uploading ...")
+        } else {
+            if(req.file) {
+                const fileName = `${uuid()}_${req.file.originalname}`
+
+                await sharp(req.file.buffer)
+                    .jpeg({quality : 50})
+                    .toFile(`./public/uploads/${fileName}`)
+
+                res.status(200).send(`http://localhost:3000/uploads/${fileName}`)
+            } else {
+                res.status(400).send("upload a picture !")
+            }
+        }
+    });
+}
+
+// * (POST) send new info of post to edit that
+exports.sendEditedPost = async (req, res) => {
+    const errorsArr = []
+    
+    const post = await Post.findById(req.params.id)
+
+    try {
+        await Post.postValidation(req.body)
+
+        !post && res.redirect("/errors/404")
+
+        post.user.toString() !== req.user._id && res.redirect("/admin/dashboard")
+
+        const { body, title, status } = req.body
+
+        await Post.findByIdAndUpdate(req.params.id, {
+            body ,title ,status
+        })
+
+        const posts = await Post.find({user : req.user._id})
+
+        res.render("dashboard", {
+            pageTitle : `${req.user.name} posts`,
+            path : '/dashboard',
+            page : "/posts",
+            fullName : req.user.name,
+            posts
+        })
+
+    } catch (err) {
+        err.errors.forEach(err => errorsArr.push(err));
+
+        res.render("dashboard", {
+            pageTitle: "Edit Post",
+            path : '/dashboard',
+            page : "/edit-post",
+            fullName: req.user.name,
+            errors: errorsArr,
+            post
+        });
+    }
+}
+
+// * (POST) delete a post
+exports.deletePost = async (req, res) => {
+    try {
+        await Post.findByIdAndDelete(req.params.id)
+
+        const posts = await Post.find({user : req.user._id})
+
+        res.render("dashboard", {
+            pageTitle : `${req.user.name} posts`,
+            path : '/dashboard',
+            page : "/posts",
+            fullName : req.user.name,
+            posts
+        })
+    } catch (err) {
+        const errorsArr = []
+
+        err.forEach((e) => errorsArr.push(e))
+        
+        const posts = await Post.find({user : req.user._id})
+
+        res.render("dashboard", {
+            pageTitle : `${req.user.name} posts`,
+            path : '/dashboard',
+            page : "/posts",
+            fullName : req.user.name,
+            posts,
+            errors
+        })
+    }
 }

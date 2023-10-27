@@ -1,10 +1,10 @@
 <form
-  action="/admin/add-post"
+  action="/admin/edit-post/<%= post._id %>"
   method="post"
   class="needs-validation"
   novalidate
 >
-  <h1 class="my-4">Add Post Form</h1>
+  <h1 class="my-4"> Edit Post : <%= post.title %> </h1>
   <% if(typeof errors !== "undefined" && errors.length > 0) { %>
     <% for( let index = 0; index < errors.length; index++ ) { %>
       <div class="alert alert-warning alert-dismissible" role="alert">
@@ -15,6 +15,7 @@
   <% } %>
   <div class="form-row">
     <div class="col-md-4 mb-3">
+        <!-- //TODO : Title -->
       <label for="validationTooltip01">Title :</label>
       <input
         name="title"
@@ -23,16 +24,19 @@
         id="validationTooltip01"
         placeholder="Title"
         required
+        value="<%= post.title %>"
       />
       <div class="valid-tooltip">Looks good!</div>
     </div>
+        <!-- //TODO : Status -->
     <div class="col-md-4 mb-3">
       <label for="statusSelect">Status :</label>
       <select id="statusSelect" name="status" class="form-select mt-2" aria-label="Default select example">
-        <option value="public" selected> public </option>
-        <option value="private"> private </option>
+        <option <% if(post.status==="public") { %> selected <% } %> value="public"> public </option>
+        <option <% if(post.status==="private") { %> selected <% } %> value="private"> private </option>
       </select>
     </div>
+        <!-- //TODO : Image -->
     <div class="col-md-4">
       <div> Upload Your Image : </div>
       <div class="my-3">
@@ -66,18 +70,23 @@
         <div id="post-progress-bar" class="progress-bar progress-bar-striped progress-bar-animated"></div>
       </div>
     </div>
+        <!-- //TODO : Body -->
     <div class="mb-3">
-      <label for="body" class="form-label"
-        >Post body :</label
-      >
-      <textarea
-        name="body"
-        placeholder="Add your post body here !"
-        class="form-control"
-        id="body"
-        rows="3"
-      ></textarea>
+        <label for="body" class="form-label">
+            Post body :
+        </label
+        >
+        <textarea
+            name="body"
+            placeholder="Add your post body here !"
+            class="form-control"
+            id="body"
+            rows="3"
+        >
+            <%= post.body %>
+        </textarea>
     </div>
   </div>
-  <button class="btn btn-primary" type="submit">Submit Form</button>
+  <button class="btn btn-primary" type="submit">Edit Form</button>
+  <a class="btn btn-warning" href="/admin/posts"> Cancel </a>
 </form>
