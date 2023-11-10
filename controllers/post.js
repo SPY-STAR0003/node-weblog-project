@@ -73,15 +73,26 @@ exports.showAddPostForm = (req,res) => {
 
 // * (GET) get posts from db
 exports.getPosts = async (req,res) => {
+
+    const page = +req.query.page || 1
+    const postsPerPage = 5
+
     try {
+        const numberOfPosts = await Post.find({user : req.user._id}).countDocuments() 
         const posts = await Post.find({user : req.user._id})
+            .skip((page-1) * postsPerPage)
+            .limit(postsPerPage)
 
         res.render("dashboard", {
             pageTitle : `${req.user.name} posts`,
             path : '/dashboard',
             page : "/posts",
             fullName : req.user.name,
-            posts
+            posts,
+            currentPage : page,
+            nextPage : page + 1,
+            prevPage : page - 1,
+            lastPage : Math.ceil(numberOfPosts / postsPerPage)
         })
     } catch (error) {
         // console.log(error)

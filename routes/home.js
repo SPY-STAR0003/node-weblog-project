@@ -1,14 +1,10 @@
 
 const { Router } = require('express');
+const {homePageController} = require('../controllers/home');
 
 const router = new Router()
 
-router.get("/" , (req,res) => {
-    res.render("index", {
-        pageTitle : "NodeJS Weblog",
-        path : "/"
-    })
-})
+router.get("/" , homePageController)
 
 
 module.exports = router
