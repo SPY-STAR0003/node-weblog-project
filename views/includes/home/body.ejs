@@ -37,7 +37,7 @@
                 <!-- * Post Body -->
                 <p class="mb-auto"><%- letterNumReducer(posts[index].body, 120) %></p>
                 
-                <a href="#" class="icon-link gap-1 icon-link-hover stretched-link">
+                <a href="./posts?id=<%= posts[index]._id%>" class="icon-link gap-1 icon-link-hover stretched-link">
                   Continue reading
                   <svg class="bi"><use xlink:href="#chevron-right"/></svg>
                 </a>
@@ -51,6 +51,8 @@
         </div>
       <% } %>
     </div>
+
+    <%- include("../components/pagination.ejs") %>
 
   </main>
 </body>

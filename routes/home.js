@@ -1,10 +1,12 @@
 
 const { Router } = require('express');
-const {homePageController} = require('../controllers/home');
+const {homePageController,postsController} = require('../controllers/home');
 
 const router = new Router()
 
 router.get("/" , homePageController)
+
+router.get("/posts" , postsController)
 
 
 module.exports = router
