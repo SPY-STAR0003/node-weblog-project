@@ -3,6 +3,7 @@
   method="post"
   class="needs-validation"
   novalidate
+  enctype="multipart/form-data"
 >
   <h1 class="my-4">Add Post Form</h1>
   <% if(typeof errors !== "undefined" && errors.length > 0) { %>
@@ -14,6 +15,27 @@
     <% } %>
   <% } %>
   <div class="form-row">
+    <div class="col-md-4">
+      <div> Thumbnail : </div>
+      <div class="my-3">
+        <div class="input-group">
+          <div>
+            <input
+              name="thumbnail"
+              type="file"
+              class="form-control"
+              id="thumbnail"
+            />
+          </div>
+        </div>
+        <div class="d-flex">
+          <div id="image-status" class="mt-2 mx-2 text-primary"> File Not Selected Yet !</div>
+          <button id="post-ing-upload-success-btn" class="btn btn-sm btn-success mt-1" style="display: none;">
+            Text Copied !
+          </button>
+        </div>
+      </div>
+    </div>
     <div class="col-md-4 mb-3">
       <label for="validationTooltip01">Title :</label>
       <input

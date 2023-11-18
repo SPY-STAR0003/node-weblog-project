@@ -10,10 +10,20 @@ const postYupSchema = yup.object({
     body : yup.string()
         .required("body is a required field"),
     status : yup.mixed()
-        .oneOf(['public', 'private'], "status has to choose between public & private !")
+        .oneOf(['public', 'private'], "status has to choose between public & private !"),
+    thumbnail : yup.object().shape({
+        name : yup.string().min(5).required(),
+        size : yup.number().max(3000000),
+        mimeType : yup.mixed()
+            .oneOf(["image/png", "image/jpeg"], "Type should be between jpeg/png .")
+    })
 })
 
 const postSchemaProps = {
+    thumbnail : {
+        type : String,
+        required : true,
+    },
     title : {
         type : String,
         trim : true,

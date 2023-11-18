@@ -7,6 +7,7 @@ const flash = require('express-flash');
 const MongoStore = require('connect-mongo');
 const debug = require('debug')("web");
 const parser = require('body-parser');
+const fileUploader = require('express-fileupload');
 
 const statics = require('./utils/statics');
 const middlewares = require("./utils/middlewares.js");
@@ -46,6 +47,8 @@ app.use(session({
 app.use(flash())
 app.use(passport.initialize())
 app.use(passport.session())
+app.use(fileUploader())
+
 
 // * engines
 // app.use(layoutManager)

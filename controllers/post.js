@@ -3,6 +3,8 @@ const multer  = require('multer')
 const {fileFilter, storage} = require('../utils/multer');
 const uuid = require('uuid').v4;
 const sharp = require('sharp');
+const root = require('app-root-path');
+const shortId = require('shortid');
 
 const Post = require('../models/post'); 
 
@@ -10,17 +12,33 @@ const Post = require('../models/post');
 exports.addPost = async (req,res) => {
 
     const errorsArr = []
+    const thumbnail = req.files ? req.files.thumbnail : {}
+    const thumbName = `${shortId.generate()}_${thumbnail.name}`
+    const thumbPath = `${root}/public/uploads/thumbnails/${thumbName}`
 
     try {
+        req.body = {...req.body, thumbnail}
+
         await Post.postValidation(req.body)
+
+        await sharp(thumbnail.data)
+            .jpeg({quality : 60})
+            .toFile(thumbPath)
+            .catch((err) => {
+                console.log(err)
+        })
 
         await Post.create({
             ...req.body,
-            user : req.user._id
+            user : req.user._id,
+            thumbnail : thumbName
         })
+
         res.redirect("/admin/posts")
     } catch (err) {
-        err.errors.forEach(err => errorsArr.push(err));
+        // err.errors.forEach(err => errorsArr.push(err));
+
+        console.log(err)
 
         res.render("dashboard", {
             pageTitle: "Add Post",
