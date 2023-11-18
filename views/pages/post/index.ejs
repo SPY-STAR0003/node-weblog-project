@@ -6,20 +6,22 @@
 <body class="m-5">
     <%- include("../../includes/home/navbar.ejs") %>
     <div class="row g-5 mt-1">
+        <div class="mt-4">
+            <h2 class="display-5 link-body-emphasis my-1"><%= post.title %></h2>
+            <p class="blog-post-meta"><%= post.createdAt.toLocaleDateString('fa-IR-u-nu-latn') %> by <a href="#"><%= user %></a></p>
+        </div>
         <div class="px-4">
             <article class="blog-post">
             <!-- ! <img src="" alt=""> -->
-            <div class="bg-secondary" style="height: 25rem;width: 100%;">
-            
-            </div>
-            <div class="mt-4">
-                <h2 class="display-5 link-body-emphasis my-1"><%= post.title %></h2>
-                <p class="blog-post-meta"><%= post.createdAt.toLocaleDateString('fa-IR-u-nu-latn') %> by <a href="#"><%= user %></a></p>
-            </div>
-    
-            <section class="mt-5">
-                <%- post.body %>
-            </section>
+            <img 
+                style="width: 100%;"
+                src="/uploads/thumbnails/<%= post.thumbnail %>" 
+                alt="<%= post.title %>"
+            >            
+        </div>
+        <section class="mt-5">
+            <%- post.body %>
+        </section>
         </div>
       </div>
 </body>

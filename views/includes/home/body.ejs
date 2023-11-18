@@ -24,7 +24,7 @@
       <% for( let index = 0; index < posts.length; index++ ) { %>
         <div class="col-md-6">
             <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-              <div class="col p-4 d-flex flex-column position-static">
+              <div class="col-7 p-4 d-flex flex-column position-static">
                 <!-- * Post Number -->
                 <strong class="d-inline-block mb-2 text-success-emphasis">Post Number (<%= posts.length - index %>)</strong>
                 
@@ -42,9 +42,13 @@
                   <svg class="bi"><use xlink:href="#chevron-right"/></svg>
                 </a>
               </div>
-              <div class="col-auto d-none d-lg-block">
+              <div class="col-5 d-none d-lg-block" style="max-height: 250px">
                 <div>
-                  <!-- TODO : Your Post Img -->
+                  <img
+                    style="max-height: 250px"
+                    src="/uploads/thumbnails/<%= posts[index].thumbnail %>"
+                    alt="<%= posts[index].title %>"
+                  >
                 </div>
               </div>
             </div>
