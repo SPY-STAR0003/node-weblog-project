@@ -3,6 +3,7 @@
   method="post"
   class="needs-validation"
   novalidate
+  enctype="multipart/form-data"
 >
   <h1 class="my-4"> Edit Post : <%= post.title %> </h1>
   <% if(typeof errors !== "undefined" && errors.length > 0) { %>
@@ -14,8 +15,24 @@
     <% } %>
   <% } %>
   <div class="form-row">
+    <!-- TODO : Thumbnail -->
+    <div class="col-md-4">
+      <div> Thumbnail : </div>
+      <div class="my-3">
+        <div class="input-group">
+          <div>
+            <input
+              name="thumbnail"
+              type="file"
+              class="form-control"
+              id="thumbnail"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="col-md-4 mb-3">
-        <!-- //TODO : Title -->
+      <!-- //TODO : Title -->
       <label for="validationTooltip01">Title :</label>
       <input
         name="title"
@@ -28,7 +45,7 @@
       />
       <div class="valid-tooltip">Looks good!</div>
     </div>
-        <!-- //TODO : Status -->
+    <!-- //TODO : Status -->
     <div class="col-md-4 mb-3">
       <label for="statusSelect">Status :</label>
       <select id="statusSelect" name="status" class="form-select mt-2" aria-label="Default select example">
@@ -36,7 +53,7 @@
         <option <% if(post.status==="private") { %> selected <% } %> value="private"> private </option>
       </select>
     </div>
-        <!-- //TODO : Image -->
+    <!-- //TODO : Image -->
     <div class="col-md-4">
       <div> Upload Your Image : </div>
       <div class="my-3">
@@ -70,7 +87,7 @@
         <div id="post-progress-bar" class="progress-bar progress-bar-striped progress-bar-animated"></div>
       </div>
     </div>
-        <!-- //TODO : Body -->
+    <!-- //TODO : Body -->
     <div class="mb-3">
         <label for="body" class="form-label">
             Post body :

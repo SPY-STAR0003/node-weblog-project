@@ -1,10 +1,13 @@
-const {get404, get500} = require('../controllers/errors');
+const fs = require('fs');
+
+const {get500} = require('../controllers/errors');
 const multer  = require('multer')
-const {fileFilter, storage} = require('../utils/multer');
+const {fileFilter} = require('../utils/multer');
 const uuid = require('uuid').v4;
 const sharp = require('sharp');
 const root = require('app-root-path');
 const shortId = require('shortid');
+const appRoot = require('app-root-path');
 
 const Post = require('../models/post'); 
 
@@ -168,8 +171,19 @@ exports.sendEditedPost = async (req, res) => {
     
     const post = await Post.findById(req.params.id)
 
+    const thumbnail = req.files ? req.files.thumbnail : {}
+    const thumbName = `${shortId.generate()}_${thumbnail.name}`
+    const thumbPath = `${root}/public/uploads/thumbnails/${thumbName}`
+
     try {
-        await Post.postValidation(req.body)
+
+        thumbnail.name 
+        ? await Post.postValidation({...req.body, thumbnail})
+        : await Post.postValidation({...req.body, thumbnail : {
+            name : "fake thumbnail",
+            size : 0,
+            mimeType : "image/jpeg"
+        }})
 
         !post && res.redirect("/errors/404")
 
@@ -177,31 +191,36 @@ exports.sendEditedPost = async (req, res) => {
 
         const { body, title, status } = req.body
 
-        await Post.findByIdAndUpdate(req.params.id, {
-            body ,title ,status
-        })
 
-        const posts = await Post.find({user : req.user._id})
+        if(thumbnail.name) {
+            fs.unlink(`${appRoot}/public/uploads/thumbnails/${post.thumbnail}`, async (err) => {
+                if(err) console.log(err)
+                else {
+                    await sharp(thumbnail.data)
+                    .jpeg({quality : 60})
+                    .toFile(thumbPath)
+                    .catch((err) => {
+                        console.log(err)
+                    })
 
-        res.render("dashboard", {
-            pageTitle : `${req.user.name} posts`,
-            path : '/dashboard',
-            page : "/posts",
-            fullName : req.user.name,
-            posts
-        })
+                    
+                    await Post.findByIdAndUpdate(req.params.id, {
+                        body ,title ,status, thumbnail : thumbName
+                    })
+                }
+
+            });
+        } else {
+            await Post.findByIdAndUpdate(req.params.id, {
+                body ,title ,status, thumbnail : post.thumbnail
+            })
+        }
+
+        res.redirect("/admin/posts")
 
     } catch (err) {
-        err.errors.forEach(err => errorsArr.push(err));
-
-        res.render("dashboard", {
-            pageTitle: "Edit Post",
-            path : '/dashboard',
-            page : "/edit-post",
-            fullName: req.user.name,
-            errors: errorsArr,
-            post
-        });
+        console.log(err)
+        res.redirect("errors/500")
     }
 }
 
@@ -209,30 +228,9 @@ exports.sendEditedPost = async (req, res) => {
 exports.deletePost = async (req, res) => {
     try {
         await Post.findByIdAndDelete(req.params.id)
-
-        const posts = await Post.find({user : req.user._id})
-
-        res.render("dashboard", {
-            pageTitle : `${req.user.name} posts`,
-            path : '/dashboard',
-            page : "/posts",
-            fullName : req.user.name,
-            posts
-        })
+        res.redirect("/admin/posts")
     } catch (err) {
-        const errorsArr = []
-
-        err.forEach((e) => errorsArr.push(e))
-        
-        const posts = await Post.find({user : req.user._id})
-
-        res.render("dashboard", {
-            pageTitle : `${req.user.name} posts`,
-            path : '/dashboard',
-            page : "/posts",
-            fullName : req.user.name,
-            posts,
-            errors
-        })
+        res.redirect("/errors/500")
+        console.log(err)
     }
 }
