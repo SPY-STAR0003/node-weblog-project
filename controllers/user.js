@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const axios = require('axios');
 
 const user = require('../models/user');
+const { mailSender } = require('../utils/mailer');
 
 exports.loginGet = (req,res) => {
     res.render("login", {
@@ -54,6 +55,8 @@ exports.loginPost = async (req,res, next) => {
 
 exports.registerPost = async (req,res) => {
 
+    const {name, email} = req.body
+
     user.userValidation(req.body)
         .then(async () => {
             const hash = await bcrypt.hash(req.body.password, 10)
@@ -63,6 +66,7 @@ exports.registerPost = async (req,res) => {
                 password : hash
             })
             .then(() => {
+                mailSender(email, name, "Register Successful !", `Dear ${name} welcome to our home !`)
                 req.flash("success_msg", `${req.body.name}! Your registering was successful !`)
                 res.redirect("/user/login")
             })

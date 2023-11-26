@@ -1,18 +1,13 @@
 const express = require('express');
 const envConfig = require('dotenv').config({path : "./config/config.env"}); 
-const morgan = require('morgan');
-const layoutManager = require("express-ejs-layouts");
 const session = require('express-session');
 const flash = require('express-flash');
 const MongoStore = require('connect-mongo');
-const debug = require('debug')("web");
 const parser = require('body-parser');
 const fileUploader = require('express-fileupload');
 
 const statics = require('./utils/statics');
-const middlewares = require("./utils/middlewares.js");
 const connectDB = require("./config/db");
-const winston = require('./config/winston');
 
 const homeRoute = require('./routes/home');
 const adminRoute = require('./routes/admin');
@@ -35,7 +30,6 @@ app.use(parser.urlencoded({extended : false}))
 
 // * statics && middlewares
 app.use(statics)
-app.use(middlewares)
 app.use(session({
     secret : process.env.SESSION_SECRET,
     resave : false,
