@@ -15,4 +15,10 @@ router.post("/register", controller.registerPost)
 
 router.get("/logout", auth, controller.logOut)
 
+router.get("/forget-password", controller.forgetPass)
+
+router.post("/forget-password", controller.forgetPassPost)
+
+router.get("/pass-rewinder", controller.passRewinder)
+
 module.exports = router

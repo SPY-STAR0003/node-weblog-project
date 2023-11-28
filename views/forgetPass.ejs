@@ -1,0 +1,31 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%- include('./includes/global/head.ejs') %>
+    </head>
+    <body class="d-flex align-items-center py-4 bg-body-tertiary">
+        <form method="post" action="forget-password" class="form-signin w-100 m-auto card text-center" style="width: 300px;">
+            <% if (typeof msg !== "undefined") { %>
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <div><%= msg %></div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <% } %>
+            <div class="card-header h5 text-white bg-primary">Password Reset</div>
+            <div class="card-body px-5">
+                <p class="card-text py-2">
+                    Enter your email address and we'll send you an email with instructions to reset your password.
+                </p>
+                <div class="form-outline">
+                    <input type="email" name="email" id="email" class="form-control my-3" />
+                </div>
+                <button class="btn btn-primary w-100">Reset password</button>
+                <div class="d-flex justify-content-between mt-4">
+                    <a class="" href="/user/login">Login</a>
+                    <a class="" href="/user/register">Register</a>
+                </div>
+            </div>
+        </form>
+    </body>
+</html>

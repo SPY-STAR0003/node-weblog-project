@@ -93,3 +93,44 @@ exports.registerGet = (req,res) => {
         path : '/register'
     })
 }
+
+exports.forgetPass = (req, res) => {
+    res.render("forgetPass", {
+        pageTitle : "Remind Password",
+        path : '/forget-password'
+    })
+}
+
+exports.forgetPassPost = async (req, res) => {
+    
+    const foundedUser = await user.findOne({email : req.body.email})
+    
+    if(foundedUser === null) {
+        return res.redirect("/")
+    }
+
+    mailSender(
+        foundedUser.email,
+        foundedUser.name,
+        "Let's Set a new Password !",
+        `
+            <h1> Let's set a new Password </h1>
+            <p> Click on the below link : </p>
+            <a href="http://localhost:3000/user/pass-rewinder"> Set New PassWord </a>
+        `
+    )
+
+    res.render("forgetPass", {
+        pageTitle : "Remind Password",
+        path : '/forget-password',
+        msg : "Email reminder has been send !"
+    })
+}
+
+exports.passRewinder = async (req, res) => {
+
+    res.render("rewinder", {
+        pageTitle : "Password Rewinder",
+        path : "/pass-rewinder"
+    })
+}
