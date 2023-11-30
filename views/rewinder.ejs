@@ -57,7 +57,7 @@
         </div>
       
         <main class="form-signin w-100 m-auto">
-          <form action="/user/register" method="post">
+          <form action="/user/pass-modifier/<%= userId %>" method="post">
             <h1 class="h3 mb-4 fw-normal">Set a new Pass Now !</h1>
             <% if (typeof errors !== "undefined") { %>
               <% errors.forEach((error) => { %>
