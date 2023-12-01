@@ -55,3 +55,41 @@ exports.postsController = async (req,res) => {
     }
 }
 
+// * (GET) Handle Search & show Posts By that
+exports.handleSearch = async (req, res) => {
+
+    const page = +req.query.page || 1
+
+    try {
+        const page = +req.query.page || 1
+        const postsPerPage = 4
+    
+        const numberOfPosts = await Post.find({
+            status : "public",
+            $text : {$search : req.body.search}
+        }).countDocuments()
+        
+        const posts = await Post.find({
+            status : "public",
+            $text : {$search : req.body.search}
+        }).sort({createdAt : "descending"})
+            .skip((page-1) * postsPerPage)
+            .limit(postsPerPage)
+    
+        res.render("index", {
+            pageTitle : "RahatBekhun",
+            path : "/",
+            posts,
+            letterNumReducer,
+            currentPage : page,
+            nextPage : page + 1,
+            prevPage : page - 1,
+            lastPage : Math.ceil(numberOfPosts / postsPerPage)
+        })
+    } catch (err) {
+        res.render("errors/500")
+        console.log(err)
+    }
+    
+ 
+}

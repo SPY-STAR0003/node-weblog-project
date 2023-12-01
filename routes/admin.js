@@ -21,4 +21,5 @@ router.post("/image-upload", auth, posts.upload)
 
 router.post("/edit-post/:id", auth, posts.sendEditedPost)
 
+
 module.exports = router
