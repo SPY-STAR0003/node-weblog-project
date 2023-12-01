@@ -8,11 +8,13 @@ const fileUploader = require('express-fileupload');
 
 const statics = require('./utils/statics');
 const connectDB = require("./config/db");
+const passport = require('passport');
 
 const homeRoute = require('./routes/home');
 const adminRoute = require('./routes/admin');
 const signRoute = require('./routes/sign');
-const passport = require('passport');
+const contactRoute = require('./routes/contact');
+
 const app = express();
 
 // * connect to Database
@@ -55,6 +57,7 @@ app.set("views", "views")
 app.use("/" ,homeRoute)
 app.use('/admin', adminRoute)
 app.use("/user", signRoute)
+app.use("/", contactRoute)
 
 // * 404
 app.use("",require('./controllers/errors').get404)

@@ -1,7 +1,6 @@
 
-const mongoose = require('mongoose');
-
-const { postSchemaProps, postYupSchema } = require('../schema/post');
+const mongoose = require('mongoose')
+const { postSchemaProps, postYupSchema } = require('../schema/post')
 
 const postSchema = new mongoose.Schema(postSchemaProps)
 
