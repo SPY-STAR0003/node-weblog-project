@@ -39,7 +39,6 @@ exports.addPost = async (req,res) => {
 
         res.redirect("/admin/posts")
     } catch (err) {
-        // err.errors.forEach(err => errorsArr.push(err));
 
         console.log(err)
 
