@@ -60,7 +60,7 @@ exports.editPost = async (req, res) => {
     })
 
     if(!post) {
-        return res.redirect("errors/404")
+        return get404(req,res)
     }
 
     if(post.user.toString() !== req.user._id) {
@@ -156,7 +156,7 @@ exports.upload = async (req, res) => {
                     .jpeg({quality : 50})
                     .toFile(`./public/uploads/${fileName}`)
 
-                res.status(200).send(`http://localhost:3000/uploads/${fileName}`)
+                res.status(200).send(`http://rahatbekhun.ir/uploads/${fileName}`)
             } else {
                 res.status(400).send("upload a picture !")
             }
@@ -184,7 +184,7 @@ exports.sendEditedPost = async (req, res) => {
             mimeType : "image/jpeg"
         }})
 
-        !post && res.redirect("/errors/404")
+        !post && get404(req,res)
 
         post.user.toString() !== req.user._id && res.redirect("/admin/dashboard")
 
@@ -219,7 +219,7 @@ exports.sendEditedPost = async (req, res) => {
 
     } catch (err) {
         console.log(err)
-        res.redirect("errors/500")
+        get500(req, res)
     }
 }
 
@@ -229,7 +229,7 @@ exports.deletePost = async (req, res) => {
         await Post.findByIdAndDelete(req.params.id)
         res.redirect("/admin/posts")
     } catch (err) {
-        res.redirect("/errors/500")
+        get500(req, res)
         console.log(err)
     }
 }

@@ -115,7 +115,7 @@ exports.forgetPassPost = async (req, res) => {
     }
 
     const token = jwt.sign({id : foundedUser._id}, process.env.JWT_SECRET, {expiresIn : '1h'})
-    const resetLink = `http://localhost:3000/user/pass-rewinder/${token}`
+    const resetLink = `http://rahatbekhun.ir/user/pass-rewinder/${token}`
 
     mailSender(
         foundedUser.email,

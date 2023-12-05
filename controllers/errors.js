@@ -5,7 +5,7 @@ exports.get404 = (req,res) => {
 }
 
 exports.get500 = (req,res) => {
-    res.render("errors/500", {
+    res.render("", {
         pageTitle : "500 | server Error"
     })
 }

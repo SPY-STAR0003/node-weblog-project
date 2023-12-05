@@ -2,6 +2,7 @@ const Post = require('../models/post');
 const User = require('../models/user');
 
 const { letterNumReducer } = require('../utils/handlers');
+const { get500, get404 } = require('./errors');
 
 // * (GET) Main Page 
 exports.homePageController = async (req,res) => {
@@ -26,7 +27,7 @@ exports.homePageController = async (req,res) => {
             lastPage : Math.ceil(numberOfPosts / postsPerPage)
         })
     } catch (err) {
-        res.render("errors/500")
+        get500(req, res)
         console.log(err)
     }
     
@@ -41,7 +42,7 @@ exports.postsController = async (req,res) => {
 
         const user = await User.findOne({ _id : post.user })
     
-        if(!post) return res.redirect("/errors/404")
+        if(!post) return get404(req,res)
     
         res.render("./pages/post/index", {
             pageTitle : post.title,
@@ -50,7 +51,7 @@ exports.postsController = async (req,res) => {
             user : user.name
         })
     } catch (error) {
-        res.render("errors/500")
+        get500(req, res)
         console.log(error)
     }
 }
@@ -87,7 +88,7 @@ exports.handleSearch = async (req, res) => {
             lastPage : Math.ceil(numberOfPosts / postsPerPage)
         })
     } catch (err) {
-        res.render("errors/500")
+        get500(req, res)
         console.log(err)
     }
     
