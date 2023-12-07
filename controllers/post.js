@@ -78,58 +78,31 @@ exports.editPost = async (req, res) => {
 }
 
 // * (GET) show add post form
-exports.showAddPostForm = (req,res) => {
-
-    // console.log("errors = " + req.flash('add_post_errors'))
-
-    res.render("dashboard", {
-        pageTitle : `Add Post`,
-        path : '/dashboard',
-        page : "/add-post",
-        errors : req.flash('add_post_errors'),
-        fullName : req.user.name,
-    })
-}
+// ! Deleted
 
 // * (GET) get posts from db
 exports.getPosts = async (req,res) => {
 
-    const page = +req.query.page || 1
-    const postsPerPage = 5
-
     try {
         const numberOfPosts = await Post.find({user : req.user._id}).countDocuments() 
         const posts = await Post.find({user : req.user._id})
-            .skip((page-1) * postsPerPage)
-            .limit(postsPerPage)
 
-        res.render("dashboard", {
-            pageTitle : `${req.user.name} posts`,
-            path : '/dashboard',
-            page : "/posts",
-            fullName : req.user.name,
-            posts,
-            currentPage : page,
-            nextPage : page + 1,
-            prevPage : page - 1,
-            lastPage : Math.ceil(numberOfPosts / postsPerPage)
+        res.status(200).json({
+            posts, total : numberOfPosts
         })
-    } catch (error) {
-        // console.log(error)
-        get500(req,res)
+
+    } catch (err) {
+        console.log(err)
+        res.status(400).json({
+            message : "There is a problem !",
+            des : err
+        })
     }
 
 }
 
 // * (GET) show dashboard page
-exports.dashboard = (req,res) => {
-    res.render("dashboard", {
-        pageTitle : "Dashboard",
-        path : '/dashboard',
-        page : "/dashboard",
-        fullName : req.user.name,
-    })
-}
+// ! Dashboard Deleted
 
 // * (POST) send a img & make a link
 exports.upload = async (req, res) => {

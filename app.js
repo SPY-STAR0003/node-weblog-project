@@ -24,11 +24,6 @@ require('./config/passport');
 
 app.use(parser.urlencoded({extended : false}))
 
-// * logging
-// if(process.env.NODE_ENV === "development") {
-//     debug("morgan is working correctly ", { stream : winston.stream })
-//     app.use(morgan("tiny"))
-// }
 
 // * statics && middlewares
 app.use(statics)
@@ -45,22 +40,11 @@ app.use(passport.initialize())
 app.use(passport.session())
 app.use(fileUploader())
 
-
-// * engines
-// app.use(layoutManager)
-// app.set('layout', './layouts/main/index');
-
-app.set("view engine" , "ejs")
-app.set("views", "views")
-
 // * routes
 app.use("/" ,homeRoute)
 app.use('/admin', adminRoute)
 app.use("/user", signRoute)
 app.use("/", contactRoute)
-
-// * 404
-app.use("",require('./controllers/errors').get404)
 
 // * listen to port 300
 const PORT = process.env.PORT || 5000

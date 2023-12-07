@@ -4,7 +4,7 @@
   "description": "this is a weblog that make by express & EJS & node !",
   "main": "index.js",
   "scripts": {
-    "start": "node app"
+    "dev": "cross-env NODE_ENV=development nodemon -e js,html,css,ejs app.js"
   },
   "author": "SPY-STAR0003",
   "license": "MIT",

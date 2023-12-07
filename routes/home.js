@@ -6,7 +6,7 @@ const router = new Router()
 
 router.get("/" , homePageController)
 
-router.get("/posts" , postsController)
+router.get("/posts/:id" , postsController)
 
 router.post("/search", handleSearch)
 
