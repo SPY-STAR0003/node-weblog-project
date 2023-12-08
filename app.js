@@ -15,6 +15,7 @@ const adminRoute = require('./routes/admin');
 const signRoute = require('./routes/sign');
 const contactRoute = require('./routes/contact');
 const {errorHandler} = require('./middlewares/error');
+const {crossOrigin} = require('./middlewares/crossOrigin');
 
 const app = express();
 
@@ -23,8 +24,9 @@ connectDB()
 
 require('./config/passport');
 
-app.use(parser.urlencoded({extended : false}))
-
+app.use(parser.urlencoded({extended : true}))
+app.use(express.json());
+app.use(crossOrigin)
 
 // * statics && middlewares
 app.use(statics)

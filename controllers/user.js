@@ -3,26 +3,9 @@ const bcrypt = require('bcryptjs');
 const axios = require('axios');
 const jwt = require('jsonwebtoken');
 
-const user = require('../models/user');
+const User = require('../models/user');
 const { mailSender } = require('../utils/mailer');
 
-exports.loginGet = (req,res) => {
-    res.render("login", {
-        pageTitle : "sign in to weblog",
-        path : '/login',
-        message : req.flash('success_msg'),
-        error : req.flash("error")
-    })
-}
-
-exports.logOut = (req,res,next) => {
-    req.logout((err) => {
-        if(err) return next(err)
-        req.session = null
-        // req.flash("success_msg", "Log Out! Successfully!");
-        res.redirect("/user/login");
-    })
-}
 
 exports.rememberMe = (req, res) => {
     if(req.body.remember) {
@@ -33,25 +16,38 @@ exports.rememberMe = (req, res) => {
 }
 
 exports.loginPost = async (req,res, next) => { 
-
-    if(!req.body['g-recaptcha-response']) {
-        req.flash("error", "You should accept captcha")
-        return res.redirect("/user/login")
-    }
-
-    const postUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.CAPTCHA_KEY}&response=${req.body['g-recaptcha-response']}`
-
+    
+    const {email, password} = req.body
+    
     try {
-        await axios.post(postUrl)
-        passport.authenticate("local", {
-            failureRedirect : "/user/login",
-            failureFlash : true,
-        })(req, res, next)
-    } catch (error) {
-        req.flash("error", "Try Again !")
-        res.redirect("/user/login")
-    }
+        const user = await User.findOne({email})
 
+        if(!user) {
+            const err = new Error("There is no user with this info !")
+            err.statusCode = 422;
+            throw err;
+        }
+
+        const isEqual = await bcrypt.compare(password, user.password)
+        
+        if(isEqual) {
+            const token = await jwt.sign({
+                user : {
+                    userId : user._id,
+                    email : user.email,
+                    name : user.name
+                }
+            }, process.env.JWT_SECRET)
+
+            res.status(200).json({token})
+        } else {
+            const err = new Error("There is no user with this info !")
+            err.statusCode = 422;
+            throw err;
+        }
+    } catch (err) {
+        next(err)
+    }
 }
 
 exports.registerPost = async (req,res) => {
@@ -86,13 +82,6 @@ exports.registerPost = async (req,res) => {
                 path : "/register"
             })
         })
-}
-
-exports.registerGet = (req,res) => {
-    res.render("register", {
-        pageTitle : "sign up to weblog",
-        path : '/register'
-    })
 }
 
 exports.forgetPass = (req, res) => {
