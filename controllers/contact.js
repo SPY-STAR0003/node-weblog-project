@@ -5,23 +5,15 @@ const {mailSender} = require('../utils/mailer');
 
 let CAPTCHA_NUM;
 
-exports.contact = (req, res) => {
-    res.render("./pages/contact", {
-        pageTitle : "Contact Us",
-        path : "/login",
-        errors : req.flash("error")
-    })
-}
-
 exports.sendContact = async (req, res) => {
 
-    const {name, email, massage, captcha} = req.body
+    // ! Captcha Deleted ! Add that in FrontEnd !
+    const {name, email, massage} = req.body
 
     const schema = yup.object({
         name : yup.string().required(),
         email : yup.string().required().email(),
         massage : yup.string().required(),
-        captcha : yup.string().required()
     })
 
     try {
@@ -37,29 +29,22 @@ exports.sendContact = async (req, res) => {
 
             console.log("Email has been Sent !")
 
-            req.flash("error", "Massage has been sent!")
-
-            return res.render("./pages/contact", {
-                pageTitle : "Contact Us",
-                path : "/login",
-                errors : req.flash("error")
+            return res.status(200).json({
+                errors : "Massage has been send!",
             })
         }
-
-        req.flash("error", "Captcha is wrong !")
-
+        
         console.log("Wrong Captcha!")
 
-        res.render("./pages/contact", {
-            pageTitle : "Contact Us",
-            path : "/login",
-            errors : req.flash("error")
+        res.status(400).json({
+            errors : "Captcha is wrong"
         })
     } catch (err) {
-        res.render("./pages/contact", {
-            pageTitle : "Contact Us",
-            path : "/login",
-            errors : err.errors
+        console.log(err)
+        
+        res.status(400).json({
+            errors : "There is an error !",
+            err
         })
     }
 }

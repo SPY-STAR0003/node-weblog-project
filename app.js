@@ -14,6 +14,7 @@ const homeRoute = require('./routes/home');
 const adminRoute = require('./routes/admin');
 const signRoute = require('./routes/sign');
 const contactRoute = require('./routes/contact');
+const {errorHandler} = require('./middlewares/error');
 
 const app = express();
 
@@ -45,6 +46,8 @@ app.use("/" ,homeRoute)
 app.use('/admin', adminRoute)
 app.use("/user", signRoute)
 app.use("/", contactRoute)
+
+app.use(errorHandler)
 
 // * listen to port 300
 const PORT = process.env.PORT || 5000
